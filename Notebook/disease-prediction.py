@@ -9,9 +9,9 @@ import matplotlib.pyplot as plt
 
 # Reading the dataset 
 dataset = pd.read_excel('./Dataset/dataset.xlsx')
-print(dataset.head)
+# print(dataset.head)
 
-data = dataset.fillna(method='ffill') # Filling all the Null values
+data = dataset.ffill() # Filling all the Null values
 print(data)
 
 
@@ -62,7 +62,8 @@ with f:
             writer.writerow([key, val[i], disease_symptom_count[key]])
             
             
+file_path = './Dataset/cleaned_data.csv' # reading the cleaned dataset
 
-df = pd.read_csv('./Dataset/cleaned_data.csv') # Reading cleaned data
-df.columns = ['disease', 'symptom', 'occurence_count']
-df.head()
+df = pd.read_csv(file_path, header=None, encoding='latin1')
+df.columns = ['disease', 'symptom', 'occurrence_count']
+print(df.head())
