@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 
 # Reading the dataset 
-dataset = pd.read_excel('./Dataset/dataset.xlsx')
+dataset = pd.read_excel('Notebook\Dataset\dataset.xlsx')
 # print(dataset.head)
 
 data = dataset.ffill() # Filling all the Null values
@@ -54,7 +54,7 @@ for idx, row in data.iterrows():
 
 
 
-f = open('./Dataset/cleaned_data.csv', 'w') # saving cleaned data
+f = open('Notebook\Dataset\cleaned_data.csv', 'w') # saving cleaned data
 with f:
     writer = csv.writer(f)
     for key, val in disease_symptom_dict.items():
@@ -62,7 +62,7 @@ with f:
             writer.writerow([key, val[i], disease_symptom_count[key]])
             
             
-file_path = './Dataset/cleaned_data.csv' # reading the cleaned dataset
+file_path = 'Notebook\Dataset\cleaned_data.csv' # reading the cleaned dataset
 
 df = pd.read_csv(file_path, header=None, encoding='latin1')
 df.columns = ['disease', 'symptom', 'occurrence_count']
