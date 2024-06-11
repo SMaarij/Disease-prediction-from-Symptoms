@@ -5,11 +5,12 @@ import numpy as np
 from collections import defaultdict
 import seaborn as sns
 import matplotlib.pyplot as plt
-
+#DATA COLLECTION
 # Reading the dataset 
 dataset = pd.read_excel('Dataset\dataset.xlsx')
 # print(dataset.head)
 
+#DATA PREPROCESSING
 data = dataset.ffill() # Filling all the Null values
 print(data)
 
@@ -130,3 +131,5 @@ X = df_concat[cols]
 
 # Labels
 y = df_concat['disease']
+
+

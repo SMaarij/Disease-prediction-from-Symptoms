@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+#EXPLORATORY DATA ANALYSIS(EDA)
 # Load the dataset with the correct path and encoding
 df = pd.read_csv(r'Dataset\cleaned_data.csv', encoding='latin1')  # or try 'ISO-8859-1' if 'latin1' does not work
 
@@ -55,4 +55,13 @@ plt.show()
 
 # Pie chart
 df['CategoricalVariable'].value_counts().plot.pie(autopct='%1.1f%%', figsize=(8, 8))
+plt.show()
+
+# Count the frequency of each category
+category_counts = df['Variable2'].value_counts()
+# Plot the histogram (bar chart)
+plt.bar(category_counts.index, category_counts.values)
+plt.xlabel('Categories')
+plt.ylabel('Frequency')
+plt.title('Histogram of Categorical Variable')
 plt.show()
