@@ -6,14 +6,12 @@ from collections import defaultdict
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-
 # Reading the dataset 
-dataset = pd.read_excel('Notebook\Dataset\dataset.xlsx')
+dataset = pd.read_excel('Dataset\dataset.xlsx')
 # print(dataset.head)
 
 data = dataset.ffill() # Filling all the Null values
 print(data)
-
 
 def process_data(data): # Processing disease and symptom names
     data_list = []
@@ -25,7 +23,6 @@ def process_data(data): # Processing disease and symptom names
         n += 1
     return data_list
 
-
 # Data Cleanup
 disease_list = []
 disease_symptom_dict = defaultdict(list)
@@ -33,7 +30,6 @@ disease_symptom_count = {}
 count = 0
 
 for idx, row in data.iterrows():
-    
     # Get the Disease Names
     if (row['Disease'] !="\xc2\xa0") and (row['Disease'] != ""): # Making sure that the disease field is neither a specific space-breaking character nor an empty string
         disease = row['Disease']
@@ -52,39 +48,35 @@ for idx, row in data.iterrows():
 # print("Disease-Symptom Dictionary:", dict(disease_symptom_dict))
 # print("Disease-Symptom Count:", disease_symptom_count)
 
-
-
-f = open('Notebook\Dataset\cleaned_data.csv', 'w') # saving cleaned data
+f = open('Dataset\cleaned_data.csv', 'w') # saving cleaned data
 with f:
     writer = csv.writer(f)
     for key, val in disease_symptom_dict.items():
         for i in range(len(val)):
             writer.writerow([key, val[i], disease_symptom_count[key]])
-            
-            
-file_path = 'Notebook\Dataset\cleaned_data.csv' # reading the cleaned dataset
+
+file_path = 'Dataset\cleaned_data.csv' # reading the cleaned dataset
 
 df = pd.read_csv(file_path, header=None, encoding='latin1')
 df.columns = ['disease', 'symptom', 'occurrence_count']
 print(df.head())
 
-#Replace all float('nan') with np.nan (standard way to represent missing values in pandas)
+# Replace all float('nan') with np.nan (standard way to represent missing values in pandas)
 df.replace(float('nan'), np.nan, inplace=True)
-#Removing rows having missing value(np.nan)
+# Removing rows having missing value(np.nan)
 df.dropna(inplace=True)
 
-#total number of unique symtoms 
+# Total number of unique symptoms
 n_unique = len(df['symptom'].unique())
 print(n_unique)
-#data type of columns
+# Data type of columns
 print(df.dtypes)
 
-
-#convert categorical labels in the 'symptom' column into columns and these columns will contain boolean labels by using LabelEncoder and OneHotEncoder technique. This process is useful when we have categorical data and need to convert it into a numerical format for certain machine learning algorithms
+# Convert categorical labels in the 'symptom' column into columns and these columns will contain boolean labels by using LabelEncoder and OneHotEncoder technique. This process is useful when we have categorical data and need to convert it into a numerical format for certain machine learning algorithms
 from sklearn import preprocessing
-#LabelEncoder from sklearn.preprocessing to convert categorical labels in the 'symptom' column of a DataFrame into integer-encoded labels
+# LabelEncoder from sklearn.preprocessing to convert categorical labels in the 'symptom' column of a DataFrame into integer-encoded labels
 from sklearn.preprocessing import LabelEncoder
-#  One-hot Encode the Integer-encoded Labels using OneHotEncoder
+# One-hot Encode the Integer-encoded Labels using OneHotEncoder
 from sklearn.preprocessing import OneHotEncoder
 
 # Initialize the LabelEncoder
@@ -92,7 +84,7 @@ label_encoder = LabelEncoder()
 # Fit and transform the 'symptom' column
 integer_encoded = label_encoder.fit_transform(df['symptom'])
 print(integer_encoded)
-#  One-hot Encode the Integer-encoded Labels using OneHotEncoder
+# One-hot Encode the Integer-encoded Labels using OneHotEncoder
 # Initialize the OneHotEncoder with sparse_output set to False
 onehot_encoder = OneHotEncoder(sparse_output=False)
 # Reshape integer_encoded to a 2D array as required by OneHotEncoder
@@ -109,3 +101,32 @@ print(df_ohe.head())
 for i in range(len(onehot_encoded)):
     df_ohe.loc[i] = onehot_encoded[i]
 print(df_ohe.head())
+
+print(len(df_ohe))
+
+# Disease Dataframe
+df_disease = df['disease']
+df_disease.head()
+
+# Concatenate OHE Labels with the Disease Column
+df_concat = pd.concat([df_disease,df_ohe], axis=1)
+df_concat.head()
+df_concat.drop_duplicates(keep='first',inplace=True)
+print(df_concat.head())
+print(len(df_concat))
+cols = df_concat.columns
+print(cols)
+cols = cols[1:]
+
+# Since, every disease has multiple symptoms, combine all symptoms per disease per row
+df_concat = df_concat.groupby('disease').sum()
+df_concat = df_concat.reset_index()
+df_concat[:5]
+print(len(df_concat))
+df_concat.to_csv("./dataset/training_dataset.csv", index=False)
+
+# One Hot Encoded Features
+X = df_concat[cols]
+
+# Labels
+y = df_concat['disease']
