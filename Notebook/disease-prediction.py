@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 # DATA COLLECTION
 # Reading the dataset
-dataset = pd.read_excel(r'Disease-prediction-from-Symptoms\Notebook\Dataset\dataset.xlsx')
+dataset = pd.read_excel(r'Dataset\\training_data.csv')
 print("Original Dataset:")
 print(dataset.head())
 
@@ -149,26 +149,3 @@ X = df_concat[cols]
 
 # Labels
 y = df_concat['disease']
-
-import pandas as pd
-
-# # Load the dataset
-# file_path = "Dataset\\training_data.csv"
-# df = pd.read_csv(file_path)
-
-# # Check for missing values
-# missing_values = df.isnull().sum()
-
-# # Print the columns with missing values
-# print("Columns with missing values:")
-# print(missing_values[missing_values > 0])
-
-# # Handle missing values (e.g., fill with mean or drop rows)
-# # Example: Fill missing values with the mean of the column
-# df_filled = df.fillna(df.mean())
-
-# # Save the preprocessed data to a new CSV file
-# output_file_path = "path/to/your/preprocessed_training_data.csv"
-# df_filled.to_csv(output_file_path, index=False)
-
-# print("Preprocessing complete. Preprocessed data saved to:", output_file_path)
